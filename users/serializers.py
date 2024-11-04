@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True)
     # phone_number = serializers.CharField(
     #     max_length=13,
     #     validators=[UniqueValidator(queryset=User.objects.all(), message="This phone number already registered")]
@@ -35,3 +36,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=255)
+    password = serializers.CharField(max_length=255)
