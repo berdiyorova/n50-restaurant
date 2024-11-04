@@ -1,4 +1,4 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
@@ -77,6 +77,30 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CommentModel.objects.all()
     permission_classes = [IsAuthenticated,]
     lookup_url_kwarg = 'pk'
+
+    def get_queryset(self):
+        return CommentModel.objects.filter(user=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        CommentModel.objects.filter(pk=self.kwargs.get('pk')).delete()
+        return Response(
+            {
+                'success': True,
+                'message': 'The comment object was deleted successfully'
+            },
+            status=status.HTTP_204_NO_CONTENT
+        )
+
+# ------------------------------------------------------------------------------------------------------------------
+
+class CommentViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CommentSerializer
+    queryset = CommentModel.objects.all().order_by('-created_at')
+    lookup_field = 'pk'
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
     def get_queryset(self):
         return CommentModel.objects.filter(user=self.request.user)
