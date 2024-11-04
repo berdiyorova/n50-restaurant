@@ -1,6 +1,7 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from app_menu.models import CategoryModel, ProductModel
+from app_menu.models import CategoryModel, ProductModel, CommentModel
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -17,4 +18,13 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductModel
+        fields = '__all__'
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+    product = serializers.PrimaryKeyRelatedField(queryset=ProductModel.objects.all())
+
+    class Meta:
+        model = CommentModel
         fields = '__all__'

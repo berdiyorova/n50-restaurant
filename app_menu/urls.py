@@ -9,4 +9,6 @@ urlpatterns = [
     path('categories/<int:pk>/', views.CategoryDetailView.as_view()),
     path('products/', views.ProductListCreateView.as_view()),
     path('products/<int:pk>/', views.ProductDetailView.as_view()),
+    path('products/<int:pk>/comments/', views.CommentListCreateView.as_view()),
+    path('comments/<int:pk>/', views.CommentDetailView.as_view()),
 ]
